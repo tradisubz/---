@@ -1,3 +1,8 @@
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
+// ✅ genAI 객체를 여기서 선언해야 함
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
+
 export async function analyzeSentiment(text: string): Promise<"positive" | "negative"> {
   try {
     const model = genAI.getGenerativeModel({ model: "gemini-pro" });
@@ -12,9 +17,9 @@ export async function analyzeSentiment(text: string): Promise<"positive" | "nega
 
     if (sentiment.includes("positive")) return "positive";
     if (sentiment.includes("negative")) return "negative";
-    return "negative"; // 분석 실패 시 기본값
+    return "negative";
   } catch (err) {
     console.error("Gemini 분석 에러:", err);
-    return "negative"; // 실패 시 기본
+    return "negative";
   }
 }
