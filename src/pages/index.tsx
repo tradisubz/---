@@ -1,7 +1,7 @@
-import SentimentCard from "@/components/SentimentCard";
-import { fetchNaverBlogs } from "@/lib/crawler";
-import { analyzeSentiment } from "@/lib/sentiment";
-import { generateStrategy } from "@/lib/strategy";
+import SentimentCard from "../components/SentimentCard";
+import { fetchNaverBlogs } from "../lib/crawler";
+import { analyzeSentiment } from "../lib/sentiment";
+import { generateStrategy } from "../lib/strategy";
 
 export default function Home({ blogs, strategy }: any) {
   return (
