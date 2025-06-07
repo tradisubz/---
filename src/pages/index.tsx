@@ -17,24 +17,34 @@ export default function Home({ blogs, strategy }: any) {
   );
 }
 
-// ✅ 서버에서 실행
 export async function getServerSideProps() {
-  const blogPosts = await fetchNaverBlogs("우리끼리 대전문화점", "2025-06-01");
-  const analyzed = await Promise.all(
-    blogPosts.map(async (post: any) => {
-      const sentiment = await analyzeSentiment(post.content);
-      return { ...post, sentiment };
-    })
-  );
+  try {
+    const blogPosts = await fetchNaverBlogs("우리끼리 대전문화점", "2025-06-01");
 
-  const positive = analyzed.filter((b) => b.sentiment === "positive").length;
-  const negative = analyzed.filter((b) => b.sentiment === "negative").length;
-  const strategy = generateStrategy({ positive, negative });
+    const analyzed = await Promise.all(
+      blogPosts.map(async (post: any) => {
+        const sentiment = await analyzeSentiment(post.content || "");
+        return { ...post, sentiment };
+      })
+    );
 
-  return {
-    props: {
-      blogs: analyzed,
-      strategy,
-    },
-  };
+    const positive = analyzed.filter((b) => b.sentiment === "positive").length;
+    const negative = analyzed.filter((b) => b.sentiment === "negative").length;
+    const strategy = generateStrategy({ positive, negative });
+
+    return {
+      props: {
+        blogs: analyzed,
+        strategy,
+      },
+    };
+  } catch (err) {
+    console.error("SSR 전체 실패:", err);
+    return {
+      props: {
+        blogs: [],
+        strategy: "데이터를 불러오지 못했습니다.",
+      },
+    };
+  }
 }
