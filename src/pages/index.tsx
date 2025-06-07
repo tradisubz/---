@@ -1,14 +1,22 @@
+// src/pages/index.tsx (최종버전)
+
 import SentimentCard from "../components/SentimentCard";
 import { fetchNaverBlogs } from "../lib/crawler";
 import { analyzeSentiment } from "../lib/sentiment";
-import { generateStrategy } from "../lib/strategy";
+import { generateStrategyFromBlogs } from "../lib/strategy";
 
 export default function Home({ blogs, strategy }: any) {
   return (
-    <div className="p-4">
-      <h1 className="text-xl font-bold mb-4">우리끼리 대전문화점 반응 모니터링</h1>
-      <p className="mb-4 text-gray-600">마케팅 전략: {strategy}</p>
-      <div className="space-y-4">
+    <div className="min-h-screen bg-pink-50 p-4">
+      <h1 className="text-2xl font-bold mb-4 text-pink-700 text-center">
+        🎀 우리끼리 대전문화점 반응 모니터링
+      </h1>
+      <div className="bg-white p-4 rounded-xl shadow text-gray-700 mb-6 max-w-2xl mx-auto">
+        <h2 className="text-lg font-semibold mb-2 text-pink-600">마케팅 전략 제안</h2>
+        <p className="text-sm whitespace-pre-wrap">{strategy}</p>
+      </div>
+
+      <div className="grid gap-4 max-w-2xl mx-auto">
         {blogs.map((blog: any, idx: number) => (
           <SentimentCard key={idx} blog={blog} />
         ))}
@@ -28,9 +36,7 @@ export async function getServerSideProps() {
       })
     );
 
-    const positive = analyzed.filter((b) => b.sentiment === "positive").length;
-    const negative = analyzed.filter((b) => b.sentiment === "negative").length;
-    const strategy = generateStrategy({ positive, negative });
+    const strategy = await generateStrategyFromBlogs(analyzed);
 
     return {
       props: {
