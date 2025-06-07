@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 사용자 정의 스타일이 필요하면 아래에 추가하세요 */
+body {
+  background-color: #f9fafb;
+  font-family: sans-serif;
+}
